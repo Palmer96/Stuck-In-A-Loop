@@ -37,8 +37,7 @@ public class CharacterMovement_Basic : MonoBehaviour
         {
             m_currentSpeed = m_walkSpeed;
         }
-
-
+        
 
         UpdateMovement();
     }
