@@ -16,7 +16,7 @@ public class SegmentManager : SingletonBase<SegmentManager>
     {
        m_currentSegment = Instantiate(m_segmentPrefab, Vector3.zero, Quaternion.identity).GetComponent<Segment>();
 
-       m_currentSegment.GenerateSegments(Segment.Direction.None);
+       m_currentSegment.GenerateAdjacentSegments(Segment.Direction.None);
 
        // m_northSegment = Instantiate(m_myPrefab, transform.position + new Vector3(0, 0, 100), Quaternion.identity).GetComponent<Segment>();
        // m_northSegment.m_direction = Direction.North;

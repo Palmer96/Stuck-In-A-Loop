@@ -13,6 +13,9 @@ public class ButtonChangeScene : ButtonBase
     public override void ButtonActivate()
     {
         base.ButtonActivate();
+        // reset default timescale between scenes
+        Time.timeScale = 1;
+
         SceneManager.LoadScene(m_sceneName);
     }
 }

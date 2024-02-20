@@ -15,7 +15,8 @@ public class Segment : MonoBehaviour
 
     [SerializeField]
     private BoxCollider m_segmentTrigger;
-    
+    [SerializeField]
+    private Transform m_spawnPoints;
 
     public GameObject m_myPrefab;
 
@@ -24,12 +25,14 @@ public class Segment : MonoBehaviour
     public Segment m_southSegment;
     public Segment m_eastSegment;
     public Segment m_westSegment;
-    
+
+    public Item itemSpawned;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        m_myPrefab = SegmentManager.Instance.m_segmentPrefab; 
+        m_myPrefab = SegmentManager.Instance.m_segmentPrefab;
     }
 
     public void SegmentEntered()
@@ -38,25 +41,25 @@ public class Segment : MonoBehaviour
         switch (m_direction)
         {
             case Direction.North:
-                GenerateSegments(Direction.South);
+                GenerateAdjacentSegments(Direction.South);
                 m_southSegment = SegmentManager.Instance.m_currentSegment;
                 SegmentManager.Instance.m_currentSegment.m_direction = Direction.South;
                 SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - South";
                 break;
             case Direction.South:
-                GenerateSegments(Direction.North);
+                GenerateAdjacentSegments(Direction.North);
                 m_northSegment = SegmentManager.Instance.m_currentSegment;
                 SegmentManager.Instance.m_currentSegment.m_direction = Direction.North;
                 SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - North";
                 break;
             case Direction.East:
-                GenerateSegments(Direction.West);
+                GenerateAdjacentSegments(Direction.West);
                 m_westSegment = SegmentManager.Instance.m_currentSegment;
                 SegmentManager.Instance.m_currentSegment.m_direction = Direction.West;
                 SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - West";
                 break;
             case Direction.West:
-                GenerateSegments(Direction.East);
+                GenerateAdjacentSegments(Direction.East);
                 m_eastSegment = SegmentManager.Instance.m_currentSegment;
                 SegmentManager.Instance.m_currentSegment.m_direction = Direction.East;
                 SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - East";
@@ -71,61 +74,104 @@ public class Segment : MonoBehaviour
     {
         if (excludeDirection != Direction.North && m_northSegment != null)
         {
+            if (m_northSegment.itemSpawned != null)
+            {
+                ItemManager.Instance.ReturnItem(m_northSegment.itemSpawned);
+            }
             Destroy(m_northSegment.gameObject);
         }
 
         if (excludeDirection != Direction.South && m_southSegment != null)
         {
+            if (m_southSegment.itemSpawned != null)
+            {
+                ItemManager.Instance.ReturnItem(m_southSegment.itemSpawned);
+            }
             Destroy(m_southSegment.gameObject);
         }
 
         if (excludeDirection != Direction.East && m_eastSegment != null)
         {
+            if (m_eastSegment.itemSpawned != null)
+            {
+                ItemManager.Instance.ReturnItem(m_eastSegment.itemSpawned);
+            }
             Destroy(m_eastSegment.gameObject);
         }
 
         if (excludeDirection != Direction.West && m_westSegment != null)
         {
+            if (m_westSegment.itemSpawned != null)
+            {
+                ItemManager.Instance.ReturnItem(m_westSegment.itemSpawned);
+            }
             Destroy(m_westSegment.gameObject);
         }
 
         m_direction = Direction.None;
     }
 
-    public void GenerateSegments(Direction excludeDirection)
+    public void GenerateAdjacentSegments(Direction excludeDirection)
     {
         if (excludeDirection != Direction.North)
         {
-            m_northSegment = Instantiate(m_myPrefab, transform.position + new Vector3(0, 0, SegmentManager.Instance.GetOffset()), Quaternion.identity).GetComponent<Segment>();
-           //GameObject obj = Instantiate(m_myPrefab, transform.position + new Vector3(0, 0, 100), Quaternion.identity);
-           //m_northSegment = obj.GetComponent<Segment>();
-
-
-            m_northSegment.m_direction = Direction.North;
-            m_northSegment.gameObject.name = "Segment - North";
+            GenerateSegment(Direction.North, out m_northSegment, new Vector3(0, 0, SegmentManager.Instance.GetOffset()));
         }
 
         if (excludeDirection != Direction.South)
         {
-            m_southSegment = Instantiate(m_myPrefab, transform.position + new Vector3(0, 0, -SegmentManager.Instance.GetOffset()), Quaternion.identity).GetComponent<Segment>();
-            m_southSegment.m_direction = Direction.South;
-            m_southSegment.gameObject.name = "Segment - South";
+            GenerateSegment(Direction.South, out m_southSegment, new Vector3(0, 0, -SegmentManager.Instance.GetOffset()));
         }
 
         if (excludeDirection != Direction.East)
         {
-            m_eastSegment = Instantiate(m_myPrefab, transform.position + new Vector3(SegmentManager.Instance.GetOffset(), 0, 0), Quaternion.identity).GetComponent<Segment>();
-            m_eastSegment.m_direction = Direction.East;
-            m_eastSegment.gameObject.name = "Segment - East";
+            GenerateSegment(Direction.East, out m_eastSegment, new Vector3(SegmentManager.Instance.GetOffset(), 0, 0));
         }
 
         if (excludeDirection != Direction.West)
         {
-            m_westSegment = Instantiate(m_myPrefab, transform.position + new Vector3(-SegmentManager.Instance.GetOffset(), 0, 0), Quaternion.identity).GetComponent<Segment>();
-            m_westSegment.m_direction = Direction.West;
-            m_westSegment.gameObject.name = "Segment - West";
+            GenerateSegment(Direction.West, out m_westSegment, new Vector3(-SegmentManager.Instance.GetOffset(), 0, 0));
         }
 
         m_direction = Direction.None;
+    }
+
+    void GenerateSegment(Direction direction, out Segment segment, Vector3 positionOffset)
+    {
+        segment = Instantiate(m_myPrefab, transform.position + positionOffset, Quaternion.identity).GetComponent<Segment>();
+
+        segment.m_direction = direction;
+        segment.gameObject.name = "Segment - " + direction.ToString();
+        segment.itemSpawned = ItemManager.Instance.GetRandomItem();
+        if (segment.itemSpawned != null)
+        {
+            segment.itemSpawned.transform.position = segment.GetSpawnPoint();
+        }
+    }
+    public Vector3 GetSpawnPoint()
+    {
+        if (m_spawnPoints != null && m_spawnPoints.childCount > 0)
+        {
+            int index = Random.Range(0, m_spawnPoints.childCount);
+            return m_spawnPoints.GetChild(index).position;
+        }
+        return transform.position;
+
+    }
+
+    public Vector3 GetRandomAdjacentSegment()
+    {
+        List<Segment> segments = new List<Segment>();
+
+        if (m_northSegment != null)
+            segments.Add(m_northSegment);
+        if (m_southSegment != null)
+            segments.Add(m_southSegment);
+        if (m_eastSegment != null)
+            segments.Add(m_eastSegment);
+        if (m_westSegment != null)
+            segments.Add(m_westSegment);
+
+        return segments[Random.Range(0, segments.Count)].transform.position;
     }
 }

@@ -9,7 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3071452956044661530}
+  - component: {fileID: 1074304159}
   - component: {fileID: 3071452956044661531}
+  - component: {fileID: 6387720155112743858}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -32,6 +34,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1074304159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3071452956044661532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c164e12ff7c2d144f9f1c3197b0c219d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3071452956044661531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47,3 +61,26 @@ MonoBehaviour:
   m_segmentPrefab: {fileID: 8182349080050628132, guid: 02c43d1197c07504291dff3dafe62b86, type: 3}
   m_currentSegment: {fileID: 0}
   m_segmentOffset: 140
+--- !u!114 &6387720155112743858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3071452956044661532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 642f02dea6bb0c948a4753bc2cb4f335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnChance: 20
+  itemPrefabs:
+  - {fileID: 2919732956010185834, guid: 700f260dea904cd46945a046a13fac7e, type: 3}
+  - {fileID: 6105016352639974175, guid: 93d639e32081c9a4283bccd553d8dc6c, type: 3}
+  - {fileID: 6867022348655829347, guid: 9488027b1cf58ab438041ea060fc2bb8, type: 3}
+  - {fileID: 5065606246194591670, guid: 736e2d408f5092544af544e399613988, type: 3}
+  - {fileID: 6410036058866219144, guid: b361b9f93252b894a9523cf2311bcf48, type: 3}
+  - {fileID: 6133218183656638807, guid: 00e48dee8cb12604485183ec3fbf98df, type: 3}
+  - {fileID: 4435907637076466703, guid: 40a6b8485d2d8d54a80fc207a2ee19cd, type: 3}
+  - {fileID: 479593088557612806, guid: 3963489d21a2673408ff315d8bfc521a, type: 3}
+  items: []

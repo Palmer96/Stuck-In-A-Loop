@@ -7,38 +7,32 @@ public class PauseMenu : PanelBase
     public override void PanelStart()
     {
         base.PanelStart();
+        GameplayManager.Instance.gamePause += PauseToggled;
     }
 
-    void Update()
+    public void PauseToggled(bool paused)
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (paused)
         {
-            if (isOpen)
-            {
-                OnClose();
-            }
-            else
-            {
-                OnOpen();
-            }
+            OnOpen();
+        }
+        else
+        {
+            OnClose();
         }
     }
 
     public override void OnOpen()
     {
         base.OnOpen();
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        Time.timeScale = 0;
     }
     public override void OnClose()
     {
         base.OnClose();
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Time.timeScale = 1;
     }
 
 }
