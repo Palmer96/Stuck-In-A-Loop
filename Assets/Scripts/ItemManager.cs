@@ -9,13 +9,13 @@ public class ItemManager : SingletonBase<ItemManager>
     public Item[] itemPrefabs;
     public List<Item> items;
 
-    public delegate void ItemFoundDelegate(int id);
-    public ItemFoundDelegate itemFound;
-
     private int itemsFound;
-
     Vector3 itemSpawnPoint = new Vector3(0, -10, 0);
 
+    // item found event
+    public delegate void ItemFoundDelegate(int id);
+    public ItemFoundDelegate itemFound;
+       
     private void Start()
     {
         for (int i = 0; i < itemPrefabs.Length; ++i)
@@ -24,19 +24,20 @@ public class ItemManager : SingletonBase<ItemManager>
         }
     }
 
+    
     public void ItemFound(Item foundItem)
     {
         itemFound?.Invoke(foundItem.itemID);
-
         Destroy(foundItem.gameObject);
 
-        ++itemsFound;
+        itemsFound++;
         if (itemsFound >= itemPrefabs.Length)
         {
             GameplayManager.Instance.GameComplete(true);
         }
     }
 
+    // returns a random item avaliable in the pool
     public Item GetRandomItem()
     {
         if (Random.Range(0, 100) < spawnChance)
@@ -51,6 +52,7 @@ public class ItemManager : SingletonBase<ItemManager>
         return null;
     }
 
+    // returns an item to the pool and resets it's position
     public void ReturnItem(Item returnedItem)
     {
         if (returnedItem != null)

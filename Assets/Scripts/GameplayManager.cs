@@ -5,17 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class GameplayManager : SingletonBase<GameplayManager>
 {
+    // game state events
     public delegate void GameEvent();
     public GameEvent gameSuceed;
     public GameEvent gameFail;
 
-    bool m_gamePaused;
     public delegate void GameEventToggle(bool pause);
     public GameEventToggle gamePause;
+    
+
+    private bool m_gameRunning = true;
+    public bool gameRunning { get { return m_gameRunning; } }
+    
+    private bool m_gamePaused = false;
+    public bool gamePaused { get { return m_gamePaused; } }
+       
 
     private CharacterMovement_Basic m_player;
     public CharacterMovement_Basic player
-    { get
+    {
+        get
         {
             if (m_player == null)
             {
@@ -24,24 +33,12 @@ public class GameplayManager : SingletonBase<GameplayManager>
             return m_player;
         }
     }
+    
+    float exitTimer;
 
-
-    private bool m_gameRunning = true;
-    public bool gameRunning { get { return m_gameRunning; } }
-
-    float exitTimer = 5f;
-
-    public void GameComplete(bool success)
+    private void Start()
     {
-        m_gameRunning = false;
-        if (success)
-        {
-            gameSuceed?.Invoke();
-        }
-        else
-        {
-            gameFail?.Invoke();
-        }
+        exitTimer = 5f;
     }
 
     private void Update()
@@ -58,8 +55,21 @@ public class GameplayManager : SingletonBase<GameplayManager>
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                PauseGame(!m_gamePaused);
+                PauseGame(!gamePaused);
             }
+        }
+    }
+
+    public void GameComplete(bool success)
+    {
+        m_gameRunning = false;
+        if (success)
+        {
+            gameSuceed?.Invoke();
+        }
+        else
+        {
+            gameFail?.Invoke();
         }
     }
 

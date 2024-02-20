@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// base script for panel scripts to inherit from
+// contains basic functionality to be overridden
 public class PanelBase : MonoBehaviour
 {
     [SerializeField] private GameObject m_basePanel;

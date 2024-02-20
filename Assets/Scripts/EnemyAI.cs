@@ -13,7 +13,7 @@ public class EnemyAI : MonoBehaviour
     private float m_maxDistanceToPlayer = 20;
     [SerializeField]
     private float m_attackDistance = 10;
-    // Start is called before the first frame update
+
     void Start()
     {
         player = GameplayManager.Instance.player;
@@ -21,7 +21,6 @@ public class EnemyAI : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
 
         SegmentManager.Instance.segmentGenerated += Respawn;
-
     }
 
     // Update is called once per frame
@@ -34,6 +33,7 @@ public class EnemyAI : MonoBehaviour
                 float distance = Vector3.Distance(transform.position, player.transform.position);
                 if (distance > m_maxDistanceToPlayer)
                 {
+                    // keep the enemy from getting too far
                     Respawn();
                 }
                 else
@@ -41,8 +41,10 @@ public class EnemyAI : MonoBehaviour
                     MoveToPlayer();
                 }
 
+                
                 CorrectHeight();
 
+                // trigger attack animation
                 if (distance < m_attackDistance)
                 {
                     anim.SetTrigger("Attack");
@@ -55,12 +57,14 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+
     void MoveToPlayer()
     {
         transform.LookAt(player.transform);
         controller.Move(transform.forward * Time.deltaTime * m_currentSpeed);
     }
 
+    // used to correct any issues that can come up with using Transform.LookAt
     void CorrectHeight()
     {
         Vector3 newPosition = transform.position;
@@ -75,6 +79,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    // move the enemy to a random position away from the player so that it is always never too far
     public void Respawn()
     {
         if (Vector3.Distance(player.transform.position, transform.position) > 100)

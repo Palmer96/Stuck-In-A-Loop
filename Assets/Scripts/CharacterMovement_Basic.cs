@@ -15,11 +15,6 @@ public class CharacterMovement_Basic : MonoBehaviour
     [SerializeField]
     private float m_runSpeed = 4.0f;
 
-    [SerializeField]
-    private float jumpHeight = 1.0f;
-    [SerializeField]
-    private float gravityValue = -9.81f;
-
 
     private void Start()
     {
@@ -55,15 +50,6 @@ public class CharacterMovement_Basic : MonoBehaviour
 
         Vector3 move = moveForward + moveRight;
         controller.Move(move * Time.deltaTime * m_currentSpeed);
-
-        // Changes the height position of the player..
-        if (Input.GetButtonDown("Jump") && groundedPlayer)
-        {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
     }
 
 

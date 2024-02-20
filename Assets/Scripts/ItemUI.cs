@@ -9,8 +9,8 @@ public class ItemUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //prefill item icons
         images = GetComponentsInChildren<Image>();
-
 
         for (int i = 0; i < ItemManager.Instance.itemPrefabs.Length; ++i)
         {
@@ -19,26 +19,15 @@ public class ItemUI : MonoBehaviour
                 images[i].sprite = ItemManager.Instance.itemPrefabs[i].lostIcon;
             }
         }
-
-        //for (int i = 0; i < ItemManager.Instance.items.Length; ++i)
-        //{
-        //    images.Add(transform.GetChild(i).GetComponent<Image>());
-        //    if (images.Count >= i)
-        //    {
-        //        images[i].sprite = ItemManager.Instance.items[i].lostIcon;
-        //    }
-        //}
-
         ItemManager.Instance.itemFound += ItemFound;
     }
 
+    // update item icon when an item is found
     void ItemFound(int id)
     {
         if (images.Length >= id)
         {
             images[id].sprite = ItemManager.Instance.itemPrefabs[id].foundIcon;
         }
-    }
-
-  
+    }  
 }

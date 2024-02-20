@@ -37,41 +37,43 @@ public class Segment : MonoBehaviour
 
     public void SegmentEntered()
     {
+        // remove previous adjuacent segments, exluding the one the player has entered
         SegmentManager.Instance.m_currentSegment.DeleteSegments(m_direction);
+
+        // update segment information
         switch (m_direction)
         {
             case Direction.North:
-                GenerateAdjacentSegments(Direction.South);
-                m_southSegment = SegmentManager.Instance.m_currentSegment;
-                SegmentManager.Instance.m_currentSegment.m_direction = Direction.South;
-                SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - South";
+                UpdateSegment(Direction.South, out m_southSegment);
                 break;
             case Direction.South:
-                GenerateAdjacentSegments(Direction.North);
-                m_northSegment = SegmentManager.Instance.m_currentSegment;
-                SegmentManager.Instance.m_currentSegment.m_direction = Direction.North;
-                SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - North";
+                UpdateSegment(Direction.North, out m_northSegment);
                 break;
             case Direction.East:
-                GenerateAdjacentSegments(Direction.West);
-                m_westSegment = SegmentManager.Instance.m_currentSegment;
-                SegmentManager.Instance.m_currentSegment.m_direction = Direction.West;
-                SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - West";
+                UpdateSegment(Direction.West, out m_westSegment);
                 break;
             case Direction.West:
-                GenerateAdjacentSegments(Direction.East);
-                m_eastSegment = SegmentManager.Instance.m_currentSegment;
-                SegmentManager.Instance.m_currentSegment.m_direction = Direction.East;
-                SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - East";
+                UpdateSegment(Direction.East, out m_eastSegment);
                 break;
         }
 
+        // assign new center segment
         SegmentManager.Instance.m_currentSegment = this;
         SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - Current";
 
+        // trigger segment creation event
         SegmentManager.Instance.SegmentGenerated();
     }
 
+    void UpdateSegment(Direction direction, out Segment segment)
+    {
+        GenerateAdjacentSegments(direction);
+        segment = SegmentManager.Instance.m_currentSegment;
+        SegmentManager.Instance.m_currentSegment.m_direction = direction;
+        SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - " + direction.ToString();
+    }
+
+    // remove segments and clean up any items in them
     public void DeleteSegments(Direction excludeDirection)
     {
         if (excludeDirection != Direction.North && m_northSegment != null)
@@ -113,6 +115,7 @@ public class Segment : MonoBehaviour
         m_direction = Direction.None;
     }
 
+    // create new segments around the current segmentm exclusing the segment you came from
     public void GenerateAdjacentSegments(Direction excludeDirection)
     {
         if (excludeDirection != Direction.North)
@@ -138,6 +141,7 @@ public class Segment : MonoBehaviour
         m_direction = Direction.None;
     }
 
+    // generate a segment, assign necessary inforation and spawn an item
     void GenerateSegment(Direction direction, out Segment segment, Vector3 positionOffset)
     {
         segment = Instantiate(m_myPrefab, transform.position + positionOffset, Quaternion.identity).GetComponent<Segment>();
@@ -150,6 +154,8 @@ public class Segment : MonoBehaviour
             segment.itemSpawned.transform.position = segment.GetSpawnPoint();
         }
     }
+
+    // return a random position based on given of potential transforms
     public Vector3 GetSpawnPoint()
     {
         if (m_spawnPoints != null && m_spawnPoints.childCount > 0)
@@ -161,6 +167,7 @@ public class Segment : MonoBehaviour
 
     }
 
+    // randomly select a segment around this segment
     public Vector3 GetRandomAdjacentSegment()
     {
         List<Segment> segments = new List<Segment>();

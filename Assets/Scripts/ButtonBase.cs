@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// base script for button scripts to inherit from
+// contains basic functionality to be overridden
 public class ButtonBase : MonoBehaviour
 {
     [SerializeField] private Button m_button;

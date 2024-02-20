@@ -1,13 +1,6 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// Declares classes like this.
-/// public class MyClass : SingletonBase<MyClass>
-/// {
-/// 
-/// }
-/// </summary>
-/// <typeparam name="T"></typeparam>
+// base script for all singleton classes to inherit from
 public class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T singleton;
