@@ -68,6 +68,8 @@ public class Segment : MonoBehaviour
 
         SegmentManager.Instance.m_currentSegment = this;
         SegmentManager.Instance.m_currentSegment.gameObject.name = "Segment - Current";
+
+        SegmentManager.Instance.SegmentGenerated();
     }
 
     public void DeleteSegments(Direction excludeDirection)
@@ -115,22 +117,22 @@ public class Segment : MonoBehaviour
     {
         if (excludeDirection != Direction.North)
         {
-            GenerateSegment(Direction.North, out m_northSegment, new Vector3(0, 0, SegmentManager.Instance.GetOffset()));
+            GenerateSegment(Direction.North, out m_northSegment, new Vector3(0, 0, SegmentManager.Instance.segmentOffset));
         }
 
         if (excludeDirection != Direction.South)
         {
-            GenerateSegment(Direction.South, out m_southSegment, new Vector3(0, 0, -SegmentManager.Instance.GetOffset()));
+            GenerateSegment(Direction.South, out m_southSegment, new Vector3(0, 0, -SegmentManager.Instance.segmentOffset));
         }
 
         if (excludeDirection != Direction.East)
         {
-            GenerateSegment(Direction.East, out m_eastSegment, new Vector3(SegmentManager.Instance.GetOffset(), 0, 0));
+            GenerateSegment(Direction.East, out m_eastSegment, new Vector3(SegmentManager.Instance.segmentOffset, 0, 0));
         }
 
         if (excludeDirection != Direction.West)
         {
-            GenerateSegment(Direction.West, out m_westSegment, new Vector3(-SegmentManager.Instance.GetOffset(), 0, 0));
+            GenerateSegment(Direction.West, out m_westSegment, new Vector3(-SegmentManager.Instance.segmentOffset, 0, 0));
         }
 
         m_direction = Direction.None;

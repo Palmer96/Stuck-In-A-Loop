@@ -9,13 +9,13 @@ public class SegmentTrigger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_parentSegment = GetComponentInParent<Segment>();    
+        m_parentSegment = GetComponentInParent<Segment>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -24,8 +24,10 @@ public class SegmentTrigger : MonoBehaviour
         {
             if (m_parentSegment != null)
             {
-                if (m_parentSegment !=  SegmentManager.Instance.m_currentSegment)    
-                m_parentSegment.SegmentEntered();
+                if (m_parentSegment != SegmentManager.Instance.m_currentSegment)
+                {
+                    m_parentSegment.SegmentEntered();
+                }
             }
             else
             {

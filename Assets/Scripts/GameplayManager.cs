@@ -13,6 +13,18 @@ public class GameplayManager : SingletonBase<GameplayManager>
     public delegate void GameEventToggle(bool pause);
     public GameEventToggle gamePause;
 
+    private CharacterMovement_Basic m_player;
+    public CharacterMovement_Basic player
+    { get
+        {
+            if (m_player == null)
+            {
+                m_player = FindObjectOfType<CharacterMovement_Basic>();
+            }
+            return m_player;
+        }
+    }
+
 
     private bool m_gameRunning = true;
     public bool gameRunning { get { return m_gameRunning; } }
